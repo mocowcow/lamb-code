@@ -23,12 +23,6 @@ func RunServer() {
 	r.Run(config.PROBLEM_ADDR)
 }
 
-type problem struct {
-	Id      int
-	Title   string
-	Content string
-}
-
 func getProblems(ctx *gin.Context) {
 	var problems []problem
 	db.Find(&problems)
@@ -46,13 +40,6 @@ func getProblem(ctx *gin.Context) {
 		http.StatusOK,
 		problem,
 	)
-}
-
-type testcase struct {
-	Id        int
-	ProblemId int
-	Input     string
-	Output    string
 }
 
 func getTestcases(ctx *gin.Context) {
