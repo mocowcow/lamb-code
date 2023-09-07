@@ -11,6 +11,7 @@ import (
 
 func Run(userCode string, inputs []string) []string {
 	if userCode == "" {
+		fmt.Println("using example code")
 		userCode = EXAMPLE_CODE
 		inputs = []string{"5 9"}
 	}
@@ -19,7 +20,7 @@ func Run(userCode string, inputs []string) []string {
 	sourceCodePath := path.Join(CODE_FOLDER, FILE_NAME)
 	executablePath := path.Join(CODE_FOLDER, "run.exe")
 	os.MkdirAll(CODE_FOLDER, os.ModePerm)
-	os.WriteFile(sourceCodePath, []byte(EXAMPLE_CODE), os.ModePerm)
+	os.WriteFile(sourceCodePath, []byte(userCode), os.ModePerm)
 
 	// complie
 	// go build -o playground/temp/user_code.exe ./playground/temp/user_code.go
