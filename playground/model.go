@@ -23,3 +23,8 @@ func main() {
 	fmt.Printf("ans=%d", ans)
 }
 `
+
+type PlaygroundArgs struct {
+	Code   string
+	Inputs []string
+}
