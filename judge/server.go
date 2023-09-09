@@ -64,7 +64,7 @@ func getTestcases(problemId int) []testcase {
 
 	req := client.R().
 		SetPathParam("host", config.PROBLEM_ADDR).
-		SetPathParam("problemId", strconv.Itoa(1)).
+		SetPathParam("problemId", strconv.Itoa(problemId)).
 		SetResult(&testcases)
 
 	req.Get("http://{host}/problems/{problemId}/testcases")
