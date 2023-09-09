@@ -18,7 +18,15 @@ func RunServer() {
 
 func submitCode(ctx *gin.Context) {
 	var input submitCodeInput
-	ctx.BindJSON(&input)
+	err := ctx.BindJSON(&input)
+	if err != nil {
+		fmt.Println("invalid input", err)
+		ctx.JSON(
+			400,
+			gin.H{"result": err},
+		)
+		return
+	}
 	fmt.Println("receive", input)
 
 	testcases := getTestcases(input.ProblemId)
@@ -30,7 +38,7 @@ func submitCode(ctx *gin.Context) {
 
 		if err != nil {
 			ctx.JSON(
-				200,
+				400,
 				gin.H{"result": "Some Error"},
 			)
 			return
@@ -50,7 +58,7 @@ func submitCode(ctx *gin.Context) {
 		}
 
 	}
-
+	fmt.Println("user 200")
 	ctx.JSON(200,
 		gin.H{
 			"result": "Accepted",
