@@ -35,14 +35,14 @@ func submitCode(ctx *gin.Context) {
 			)
 			return
 		}
-
-		if res != tc.Output {
+		resStr := strings.Join(res, "\n")
+		if resStr != tc.Output {
 			ctx.JSON(
 				200,
 				gin.H{
 					"result":   "Wrong Answer",
 					"input":    tc.Input,
-					"output":   res,
+					"output":   resStr,
 					"expected": tc.Output,
 				},
 			)

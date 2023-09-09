@@ -30,7 +30,7 @@ func randInt(min int, max int) int {
 	return min + rand.Intn(max-min)
 }
 
-func playgroudRPC(code string, inputs []string) (res string, err error) {
+func playgroudRPC(code string, inputs []string) (res []string, err error) {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -81,7 +81,7 @@ func playgroudRPC(code string, inputs []string) (res string, err error) {
 
 	for d := range msgs {
 		if corrId == d.CorrelationId {
-			res = string(d.Body)
+			json.Unmarshal(d.Body, &res)
 			failOnError(err, "Failed to convert body to integer")
 			break
 		}
