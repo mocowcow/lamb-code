@@ -13,6 +13,9 @@ import (
 func RunServer() {
 	r := gin.Default()
 	r.POST("/submit", submitCode)
+
+	frontendRouting(r)
+
 	r.Run(config.JUDGE_ADDR)
 }
 
