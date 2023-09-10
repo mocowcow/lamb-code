@@ -10,7 +10,7 @@ import (
 
 func frontendRouting(r *gin.Engine) {
 	r.LoadHTMLGlob("./judge/*.html")
-	r.GET("/index/:id}", getIndex)
+	r.GET("/index/:id", getIndex)
 	r.GET("/problems/:id", getProblem)
 }
 
