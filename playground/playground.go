@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 )
 
 func Run(userCode string, inputs []string) []string {
@@ -25,10 +26,11 @@ func Run(userCode string, inputs []string) []string {
 	// complie
 	// go build -o playground/temp/user_code.exe ./playground/temp/user_code.go
 	cmd := exec.Command("go", "build", "-o", executablePath, sourceCodePath)
-	_, err := cmd.Output()
+	b, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("complie failed:", err)
-		return []string{err.Error()}
+		s := string(b)
+		fmt.Println("complie failed:\n", s)
+		return strings.Split(s, "\n")[1:]
 	}
 
 	// run executable
