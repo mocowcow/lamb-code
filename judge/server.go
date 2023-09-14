@@ -40,33 +40,25 @@ func submitCode(ctx *gin.Context) {
 		res, err := playgroudRPC(input.Code, strings.Split(tc.Input, "\n"))
 
 		if err != nil {
-			ctx.JSON(
-				400,
-				gin.H{"result": "Some Error"},
-			)
+			ctx.String(400, "Some Error")
 			return
 		}
 		resStr := strings.Join(res, "\n")
 		if resStr != tc.Output {
-			ctx.JSON(
-				200,
-				gin.H{
-					"result":   "Wrong Answer",
-					"input":    tc.Input,
-					"output":   resStr,
-					"expected": tc.Output,
-				},
-			)
+			respStrs := make([]string, 0)
+			respStrs = append(respStrs, "Wrong Answer")
+			respStrs = append(respStrs, "Input :")
+			respStrs = append(respStrs, tc.Input)
+			respStrs = append(respStrs, "Output :")
+			respStrs = append(respStrs, resStr)
+			respStrs = append(respStrs, "Expected :")
+			respStrs = append(respStrs, tc.Output)
+			ctx.String(200, strings.Join(respStrs, "\n"))
 			return
 		}
-
 	}
-	fmt.Println("user 200")
-	ctx.JSON(200,
-		gin.H{
-			"result": "Accepted",
-		},
-	)
+
+	ctx.String(200, "Accepted")
 }
 
 func getTestcases(problemId int) []testcase {
