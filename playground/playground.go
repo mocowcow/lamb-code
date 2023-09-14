@@ -30,7 +30,7 @@ func Run(userCode string, inputs []string) []string {
 	if err != nil {
 		s := string(b)
 		fmt.Println("complie failed:\n", s)
-		return strings.Split(s, "\n")[1:]
+		return strings.Split(s, "\n")
 	}
 
 	// run executable
