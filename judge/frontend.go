@@ -1,8 +1,8 @@
 package judge
 
 import (
-	"fmt"
 	"lamb-code/config"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
@@ -21,7 +21,8 @@ func getIndex(ctx *gin.Context) {
 func getProblem(ctx *gin.Context) {
 	client := resty.New()
 	problemId := ctx.Param("id")
-	data := gin.H{}
+
+	var data gin.H
 	req := client.R().
 		SetPathParam("host", config.PROBLEM_ADDR).
 		SetPathParam("problemId", problemId).
@@ -29,6 +30,9 @@ func getProblem(ctx *gin.Context) {
 
 	req.Get("http://{host}/problems/{problemId}")
 
-	s := fmt.Sprintf("%s : %s", data["Title"], data["Content"])
-	ctx.String(200, s)
+	respStrs := make([]string, 0)
+	respStrs = append(respStrs, data["Title"].(string))
+	respStrs = append(respStrs, data["Content"].(string))
+
+	ctx.String(200, strings.Join(respStrs, "\n"))
 }
