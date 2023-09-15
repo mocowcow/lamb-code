@@ -34,7 +34,7 @@
         const problemId = pathParams[pathParams.length - 1]; // 获取最后一个路径参数
 
         // 构建请求URL
-        const requestUrl = `http://localhost:19811/problems/${problemId}`;
+        const requestUrl = `http://${window.location.host}/problems/${problemId}`;
 
         // 设置文本区块内容为构建的请求URL
         const pathText = document.getElementById('pathText');
@@ -72,7 +72,7 @@
             };
 
             try {
-                const response = await fetch("http://localhost:19811/submit", {
+                const response = await fetch(`http://${window.location.host}/submit`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
