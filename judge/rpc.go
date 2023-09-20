@@ -31,7 +31,7 @@ func randInt(min int, max int) int {
 }
 
 func playgroudRPC(code string, inputs []string) (res []string, err error) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@" + config.MQ_ADDR)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 

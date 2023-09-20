@@ -24,7 +24,7 @@ func getProblem(ctx *gin.Context) {
 
 	var data gin.H
 	req := client.R().
-		SetPathParam("host", config.PROBLEM_ADDR).
+		SetPathParam("host", config.PROBLEM_HOST).
 		SetPathParam("problemId", problemId).
 		SetResult(&data)
 

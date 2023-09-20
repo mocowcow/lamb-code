@@ -16,7 +16,7 @@ func RunServer() {
 
 	frontendRouting(r)
 
-	r.Run(config.JUDGE_ADDR)
+	r.Run(config.JUDGE_PORT)
 }
 
 func submitCode(ctx *gin.Context) {
@@ -66,7 +66,7 @@ func getTestcases(problemId int) []testcase {
 	var testcases []testcase
 
 	req := client.R().
-		SetPathParam("host", config.PROBLEM_ADDR).
+		SetPathParam("host", config.PROBLEM_HOST).
 		SetPathParam("problemId", strconv.Itoa(problemId)).
 		SetResult(&testcases)
 
