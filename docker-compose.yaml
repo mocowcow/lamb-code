@@ -1,0 +1,25 @@
+# build an image called lamd-code before start compose:
+# docker build -t lamb-code .
+
+version: '3.0'
+services:
+
+  problem:
+    container_name: problem
+    image: lamb-code
+    ports:
+      - 19810:19810
+    command: ./problem_service
+
+  judge:
+    container_name: judge
+    image: lamb-code
+    ports:
+      - 19811:19811
+    command: ./judge_service
+
+  playground:
+    container_name: pg
+    image: lamb-code
+    command: ./pg_service
+
