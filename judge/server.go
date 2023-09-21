@@ -1,6 +1,7 @@
 package judge
 
 import (
+	"errors"
 	"fmt"
 	"lamb-code/config"
 	"strconv"
@@ -33,7 +34,12 @@ func submitCode(ctx *gin.Context) {
 	}
 	fmt.Println("receive", input)
 
-	testcases := getTestcases(input.ProblemId)
+	testcases, err := getTestcases(input.ProblemId)
+	if err != nil {
+		ctx.String(400, err.Error())
+		return
+	}
+
 	fmt.Println("TCs", testcases)
 
 	// do RPC for each TC
@@ -62,7 +68,7 @@ func submitCode(ctx *gin.Context) {
 	ctx.String(200, "Accepted")
 }
 
-func getTestcases(problemId int) []testcase {
+func getTestcases(problemId int) ([]testcase, error) {
 	client := resty.New()
 	var testcases []testcase
 	host := fmt.Sprintf("%s:%s",
@@ -76,5 +82,9 @@ func getTestcases(problemId int) []testcase {
 
 	req.Get("http://{host}/problems/{problemId}/testcases")
 
-	return testcases
+	if len(testcases) == 0 {
+		return nil, errors.New("failed to get TCs")
+	}
+
+	return testcases, nil
 }
