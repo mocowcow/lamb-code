@@ -11,12 +11,6 @@ import (
 )
 
 func Run(userCode string, inputs []string) []string {
-	if userCode == "" {
-		fmt.Println("using example code")
-		userCode = EXAMPLE_CODE
-		inputs = []string{"5 9"}
-	}
-
 	// write to temp file
 	sourceCodePath := path.Join(CODE_FOLDER, FILE_NAME)
 	executablePath := path.Join(CODE_FOLDER, "run.exe")
