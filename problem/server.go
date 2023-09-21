@@ -20,7 +20,9 @@ func RunServer() {
 	r.GET("/problems/:id", getProblem)
 	r.GET("/problems/:id/testcases", getTestcases)
 
-	r.Run(config.PROBLEM_PORT)
+	addr := ":" + config.GetString("service.problem.port")
+	r.Run(addr)
+
 }
 
 func getProblems(ctx *gin.Context) {

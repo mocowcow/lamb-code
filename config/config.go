@@ -1,24 +1,23 @@
 package config
 
-// const HOST = "mynet"
-const HOST = "localhost"
+import (
+	"fmt"
 
-// const INTERNAL = "host.docker.internal"
-const INTERNAL = "localhost"
+	"github.com/spf13/viper"
+)
 
-// database
-const DB_USER = "go"
-const DB_PW = "go"
-const DB_ADDR = INTERNAL + ":3306"
+func init() {
+	viper.SetConfigType("ini")
+	viper.SetConfigName("config")
+	viper.AddConfigPath("./config")
 
-// playground service
-const MQ_ADDR = INTERNAL + ":5672"
-const PLAYGROUND_RPC_QUEUE = "playground_rpc_queue"
+	err := viper.ReadInConfig()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
 
-// problem service
-const PROBLEM_PORT = ":19810"
-const PROBLEM_HOST = "problem" + PROBLEM_PORT
-
-// judege service
-const JUDGE_PORT = ":19811"
-const JUDGE_HOST = "judge" + JUDGE_PORT
+func GetString(s string) string {
+	return viper.GetString(s)
+}

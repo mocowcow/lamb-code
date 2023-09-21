@@ -69,10 +69,10 @@ func RPC(code string, inputs []string) (res string, err error) {
 	defer cancel()
 
 	err = ch.PublishWithContext(ctx,
-		"",                          // exchange
-		config.PLAYGROUND_RPC_QUEUE, // routing key
-		false,                       // mandatory
-		false,                       // immediate
+		"", // exchange
+		config.GetString("service.playground.rpc.queue"), // routing key
+		false, // mandatory
+		false, // immediate
 		amqp.Publishing{
 			CorrelationId: corrId,
 			ReplyTo:       q.Name,

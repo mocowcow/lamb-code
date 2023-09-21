@@ -1,6 +1,7 @@
 package judge
 
 import (
+	"fmt"
 	"lamb-code/config"
 	"strings"
 
@@ -21,10 +22,13 @@ func getIndex(ctx *gin.Context) {
 func getProblem(ctx *gin.Context) {
 	client := resty.New()
 	problemId := ctx.Param("id")
-
+	host := fmt.Sprintf("%s:%s",
+		config.GetString("service.problem.host"),
+		config.GetString("service.problem.port"),
+	)
 	var data gin.H
 	req := client.R().
-		SetPathParam("host", config.PROBLEM_HOST).
+		SetPathParam("host", host).
 		SetPathParam("problemId", problemId).
 		SetResult(&data)
 

@@ -16,7 +16,8 @@ func RunServer() {
 
 	frontendRouting(r)
 
-	r.Run(config.JUDGE_PORT)
+	addr := ":" + config.GetString("service.judge.port")
+	r.Run(addr)
 }
 
 func submitCode(ctx *gin.Context) {
@@ -64,9 +65,12 @@ func submitCode(ctx *gin.Context) {
 func getTestcases(problemId int) []testcase {
 	client := resty.New()
 	var testcases []testcase
-
+	host := fmt.Sprintf("%s:%s",
+		config.GetString("service.problem.host"),
+		config.GetString("service.problem.port"),
+	)
 	req := client.R().
-		SetPathParam("host", config.PROBLEM_HOST).
+		SetPathParam("host", host).
 		SetPathParam("problemId", strconv.Itoa(problemId)).
 		SetResult(&testcases)
 

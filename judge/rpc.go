@@ -31,7 +31,7 @@ func randInt(min int, max int) int {
 }
 
 func playgroudRPC(code string, inputs []string) (res []string, err error) {
-	conn, err := amqp.Dial("amqp://guest:guest@" + config.MQ_ADDR)
+	conn, err := amqp.Dial("amqp://guest:guest@" + config.GetString("mq.host") + ":" + config.GetString("mq.port"))
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -68,10 +68,10 @@ func playgroudRPC(code string, inputs []string) (res []string, err error) {
 	defer cancel()
 
 	err = ch.PublishWithContext(ctx,
-		"",                          // exchange
-		config.PLAYGROUND_RPC_QUEUE, // routing key
-		false,                       // mandatory
-		false,                       // immediate
+		"", // exchange
+		config.GetString("service.playground.rpc.queue"), // routing key
+		false, // mandatory
+		false, // immediate
 		amqp.Publishing{
 			CorrelationId: corrId,
 			ReplyTo:       q.Name,

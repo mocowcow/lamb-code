@@ -11,7 +11,7 @@ import (
 )
 
 func RunPRCServer() {
-	conn, err := amqp.Dial("amqp://guest:guest@" + config.MQ_ADDR)
+	conn, err := amqp.Dial("amqp://guest:guest@" + config.GetString("mq.host") + ":" + config.GetString("mq.port"))
 	if err != nil {
 		fmt.Println("Failed to connect to RabbitMQ")
 		return
@@ -26,12 +26,12 @@ func RunPRCServer() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		config.PLAYGROUND_RPC_QUEUE, // name
-		false,                       // durable
-		false,                       // delete when unused
-		false,                       // exclusive
-		false,                       // no-wait
-		nil,                         // arguments
+		config.GetString("service.playground.rpc.queue"), // name
+		false, // durable
+		false, // delete when unused
+		false, // exclusive
+		false, // no-wait
+		nil,   // arguments
 	)
 	if err != nil {
 		fmt.Println("Failed to declare a queue")
