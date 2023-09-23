@@ -13,7 +13,10 @@ import (
 
 func RunServer() {
 	r := gin.Default()
-	r.POST("/submit", submitCode)
+
+	api := r.Group("/api")
+	api.GET("/problems/:id", getProblem)
+	api.POST("/submit", submitCode)
 
 	frontendRouting(r)
 
@@ -80,11 +83,33 @@ func getTestcases(problemId int) ([]testcase, error) {
 		SetPathParam("problemId", strconv.Itoa(problemId)).
 		SetResult(&testcases)
 
-	req.Get("http://{host}/problems/{problemId}/testcases")
+	req.Get("http://{host}/api/problems/{problemId}/testcases")
 
 	if len(testcases) == 0 {
 		return nil, errors.New("failed to get TCs")
 	}
 
 	return testcases, nil
+}
+
+func getProblem(ctx *gin.Context) {
+	client := resty.New()
+	problemId := ctx.Param("id")
+	host := fmt.Sprintf("%s:%s",
+		config.GetString("service.problem.host"),
+		config.GetString("service.problem.port"),
+	)
+	var data gin.H
+	req := client.R().
+		SetPathParam("host", host).
+		SetPathParam("problemId", problemId).
+		SetResult(&data)
+
+	req.Get("http://{host}/api/problems/{problemId}")
+
+	respStrs := make([]string, 0)
+	respStrs = append(respStrs, data["Title"].(string))
+	respStrs = append(respStrs, data["Content"].(string))
+
+	ctx.String(200, strings.Join(respStrs, "\n"))
 }

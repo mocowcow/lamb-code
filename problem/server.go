@@ -16,9 +16,11 @@ func RunServer() {
 	db, _ = utils.GetDB("problem")
 
 	r := gin.Default()
-	r.GET("/problems", getProblems)
-	r.GET("/problems/:id", getProblem)
-	r.GET("/problems/:id/testcases", getTestcases)
+
+	api := r.Group("/api")
+	api.GET("/problems", getProblems)
+	api.GET("/problems/:id", getProblem)
+	api.GET("/problems/:id/testcases", getTestcases)
 
 	addr := ":" + config.GetString("service.problem.port")
 	r.Run(addr)
