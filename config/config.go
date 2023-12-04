@@ -1,14 +1,18 @@
 package config
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/spf13/viper"
 )
 
 func init() {
+	configName := flag.String("config", "config", "config file name")
+	flag.Parse()
+
 	viper.SetConfigType("ini")
-	viper.SetConfigName("config")
+	viper.SetConfigName(*configName)
 	viper.AddConfigPath("./config")
 
 	err := viper.ReadInConfig()
