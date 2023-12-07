@@ -9,17 +9,17 @@ services:
     image: lamb-code
     ports:
       - 19810:19810
-    command: ./problem_service
+    command: ./problem_service -config=config-docker
 
   judge:
     container_name: judge
     image: lamb-code
     ports:
       - 19811:19811
-    command: ./judge_service
+    command: ./judge_service -config=config-docker
 
   playground:
     container_name: pg
     image: lamb-code
-    command: ./pg_service
+    command: ./pg_service -config=config-docker
 
