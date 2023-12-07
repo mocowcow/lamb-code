@@ -11,6 +11,7 @@ func init() {
 	configName := flag.String("config", "config", "config file name")
 	flag.Parse()
 
+	fmt.Println("using config file:", *configName)
 	viper.SetConfigType("ini")
 	viper.SetConfigName(*configName)
 	viper.AddConfigPath("./config")

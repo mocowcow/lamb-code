@@ -3,6 +3,7 @@ package judge
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"lamb-code/config"
 	"lamb-code/playground"
 	"log"
@@ -31,7 +32,8 @@ func randInt(min int, max int) int {
 }
 
 func playgroudRPC(code string, inputs []string) (res []string, err error) {
-	conn, err := amqp.Dial("amqp://guest:guest@" + config.GetString("mq.host") + ":" + config.GetString("mq.port"))
+	url := fmt.Sprintf("amqp://%s:%s@%s:%s", config.GetString("mq.user"), config.GetString("mq.pw"), config.GetString("mq.host"), config.GetString("mq.port"))
+	conn, err := amqp.Dial(url)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 

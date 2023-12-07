@@ -11,8 +11,10 @@ import (
 )
 
 func RunPRCServer() {
-	conn, err := amqp.Dial("amqp://guest:guest@" + config.GetString("mq.host") + ":" + config.GetString("mq.port"))
+	url := fmt.Sprintf("amqp://%s:%s@%s:%s", config.GetString("mq.user"), config.GetString("mq.pw"), config.GetString("mq.host"), config.GetString("mq.port"))
+	conn, err := amqp.Dial(url)
 	if err != nil {
+		fmt.Println(err)
 		fmt.Println("Failed to connect to RabbitMQ")
 		return
 	}
