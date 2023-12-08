@@ -20,20 +20,15 @@
 
 - MySQL
 - RabbitMQ
-- Golang (本地部署需要)  
-- Docker (Docker部署需要)
+- Golang
+- Docker (可選)
 
 ## 使用方式
 
 網頁入口：  
 <http://localhost:19811/index/1>
 
-### 準備db
-
-根據 config/config.ini 建立使用者。  
-建立 database problem，並匯入SQL。  
-
-### Docker
+### Docker 部署
 
 首先建構 docker image，名稱為 lamb-code。  
 
@@ -41,15 +36,26 @@
 docker build -t lamb-code .
 ```
 
-執行 docker compose。  
+使用 docker compose 啟動系統依賴。  
+包含 RabbitMQ, MySQL。  
 
 ```console
-docker compose up
+docker compose -f .\docker-compose-dependency.yaml up -d
 ```
 
-### 本地運行
+確認系統依賴啟動完成，再啟動 lamb-code 即可。  
 
-修改 config/config.ini 中各服務對應的 host 為 localhost。  
+```console
+docker compose up -d
+```
+
+### 手動部署
+
+#### 自訂系統依賴
+
+也可以使用自訂的 MySQL, RabbitMQ。  
+修改 config/config.ini 中各服務設定。  
+記得建立 database problem，並匯入 SQL。  
 
 ```console
 [db]
@@ -59,13 +65,20 @@ host=localhost
 [mq]
 host=localhost
 ..
+```
 
+#### 啟動 lamb-code
+
+同樣修改 host。  
+
+```console
 [service.problem]
 host=localhost
 ..
 
 [service.judge]
 host=localhost
+..
 ```
 
-執行server.bat。  
+執行 server.bat。  
