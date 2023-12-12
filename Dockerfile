@@ -5,7 +5,7 @@ WORKDIR /lamb-code
 COPY . .
 
 RUN go mod download
-RUN go build -o pg_service ./cmd/playground/RPC_server
+RUN go build -o pg_service ./cmd/playground
 RUN go build -o judge_service ./cmd/judge
 RUN go build -o problem_service ./cmd/problem
 
