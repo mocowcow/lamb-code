@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT產生的前端</title>
+</head>
+
+<body>
+    <div>
+        <h2>GPT產生的前端</h2>
+        <p id="pathText"></p>
+        <div id="responseDiv" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: 45%;">
+            <h2>程式碼編輯區</h2>
+            <label>語言</label>
+            <select name="cars" id="lang">
+                <option>選擇語言</option>
+                <option value="go">go 1.20</option>
+            </select>
+            <textarea id="requestTextarea" style="width: 100%; height: 200px;"></textarea>
+            <button id="sendButton">提交答案</button>
+        </div>
+        <div style="width: 45%;">
+            <h2>提交結果</h2>
+            <div id="bottomText"
+                style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; height: 200px; overflow: auto;">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取路径参数
+        const pathParams = window.location.pathname.split('/');
+        const problemId = pathParams[pathParams.length - 1]; // 获取最后一个路径参数
+
+        // 构建请求URL
+        const requestUrl = `http://${window.location.host}/api/problems/${problemId}`;
+
+        // 设置文本区块内容为构建的请求URL
+        const pathText = document.getElementById('pathText');
+        pathText.textContent = `第${problemId}題`;
+
+        // 发送GET请求以获取内容
+        fetch(requestUrl)
+            .then(response => {
+                if (response.ok) {
+                    return response.text(); // 解析响应为JSON格式
+                } else {
+                    throw new Error('请求失败');
+                }
+            })
+            .then(data => {
+                // 显示获取的JSON内容在上方的文字区块中
+                document.getElementById('responseDiv').textContent = data;
+            })
+            .catch(error => {
+                // 处理错误
+                document.getElementById('responseDiv').textContent = error.message;
+            });
+
+        const requestTextarea = document.getElementById('requestTextarea');
+        const sendButton = document.getElementById('sendButton');
+        const bottomText = document.getElementById('bottomText');
+
+        sendButton.addEventListener('click', async () => {
+            const requestText = requestTextarea.value;
+
+            // 构建JSON对象，包括当前的ID和文本编辑区的内容
+            const requestData = {
+                ProblemId: parseInt(problemId),
+                Code: requestText
+            };
+
+            try {
+                const response = await fetch(`http://${window.location.host}/api/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (response.ok) {
+                    const responseData = await response.text();
+                    bottomText.textContent = responseData;
+                } else {
+                    bottomText.textContent = '请求失败';
+                }
+            } catch (error) {
+                bottomText.textContent = '请求失败';
+            }
+        });
+
+        langSelectList = document.getElementById("lang")
+        codeBlock = document.getElementById("requestTextarea")
+        langSelectList.addEventListener("change", async () => {
+            const lang = langSelectList.value
+            try {
+                const response = await fetch(`http://${window.location.host}/template/${lang}`);
+                if (response.ok) {
+                    const responseData = await response.text();
+                    codeBlock.value = responseData;
+                } else {
+                    codeBlock.value = '请求失败';
+                }
+            } catch (error) {
+                codeBlock.value = '请求失败';
+            }
+        });
+    </script>
+</body>
+
+</html>
