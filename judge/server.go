@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"lamb-code/config"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -30,8 +31,9 @@ func submitCode(ctx *gin.Context) {
 	err := ctx.BindJSON(&input)
 	if err != nil {
 		fmt.Println("invalid input", err)
+
 		ctx.JSON(
-			400,
+			http.StatusBadRequest,
 			gin.H{"result": err},
 		)
 		return
@@ -40,7 +42,10 @@ func submitCode(ctx *gin.Context) {
 
 	testcases, err := getTestcases(input.ProblemId)
 	if err != nil {
-		ctx.String(400, err.Error())
+		ctx.String(
+			http.StatusBadRequest,
+			err.Error(),
+		)
 		return
 	}
 
@@ -64,12 +69,19 @@ func submitCode(ctx *gin.Context) {
 			respStrs = append(respStrs, resStr)
 			respStrs = append(respStrs, "Expected :")
 			respStrs = append(respStrs, tc.Output)
-			ctx.String(200, strings.Join(respStrs, "\n"))
+
+			ctx.String(
+				http.StatusOK,
+				strings.Join(respStrs, "\n"),
+			)
 			return
 		}
 	}
 
-	ctx.String(200, "Accepted")
+	ctx.String(
+		http.StatusOK,
+		"Accepted",
+	)
 }
 
 func getTestcases(problemId int) ([]testcase, error) {
@@ -112,7 +124,10 @@ func getProblem(ctx *gin.Context) {
 	respStrs = append(respStrs, data["Title"].(string))
 	respStrs = append(respStrs, data["Content"].(string))
 
-	ctx.String(200, strings.Join(respStrs, "\n"))
+	ctx.String(
+		http.StatusOK,
+		strings.Join(respStrs, "\n"),
+	)
 }
 
 func getProblems(ctx *gin.Context) {
@@ -128,6 +143,9 @@ func getProblems(ctx *gin.Context) {
 
 	req.Get("http://{host}/api/problems")
 
-	ctx.JSON(200, problems)
+	ctx.JSON(
+		http.StatusOK,
+		problems,
+	)
 
 }

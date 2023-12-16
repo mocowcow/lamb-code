@@ -30,6 +30,7 @@ func RunServer() {
 func getProblems(ctx *gin.Context) {
 	var problems []problem
 	db.Find(&problems)
+
 	ctx.JSON(
 		http.StatusOK,
 		problems,
@@ -40,6 +41,7 @@ func getProblem(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var problem problem
 	db.Find(&problem, id)
+
 	ctx.JSON(
 		http.StatusOK,
 		problem,
@@ -50,6 +52,7 @@ func getTestcases(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var testcases []testcase
 	db.Where("problem_id = ?", id).Find(&testcases)
+
 	ctx.JSON(
 		http.StatusOK,
 		testcases,
