@@ -26,7 +26,7 @@
 ## 使用方式
 
 網頁入口：  
-<http://localhost:19811/index/1>
+<http://localhost:19811/index>
 
 ### Docker 部署
 
