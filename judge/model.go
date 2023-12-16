@@ -33,3 +33,9 @@ func main() {
 }
 `
 }
+
+type problem struct {
+	Id      int
+	Title   string
+	Content string
+}

@@ -15,6 +15,7 @@ func RunServer() {
 	r := gin.Default()
 
 	api := r.Group("/api")
+	api.GET("/problems", getProblems)
 	api.GET("/problems/:id", getProblem)
 	api.POST("/submit", submitCode)
 
@@ -112,4 +113,21 @@ func getProblem(ctx *gin.Context) {
 	respStrs = append(respStrs, data["Content"].(string))
 
 	ctx.String(200, strings.Join(respStrs, "\n"))
+}
+
+func getProblems(ctx *gin.Context) {
+	client := resty.New()
+	host := fmt.Sprintf("%s:%s",
+		config.GetString("service.problem.host"),
+		config.GetString("service.problem.port"),
+	)
+	var problems []problem
+	req := client.R().
+		SetPathParam("host", host).
+		SetResult(&problems)
+
+	req.Get("http://{host}/api/problems")
+
+	ctx.JSON(200, problems)
+
 }
