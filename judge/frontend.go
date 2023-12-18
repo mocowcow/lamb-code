@@ -5,10 +5,11 @@ import (
 )
 
 func frontendRouting(r *gin.Engine) {
-	r.LoadHTMLGlob("./judge/*.html")
+	r.LoadHTMLGlob("./judge/assets/*.html")
+	r.Static("code_template", "./judge/assets/code_template")
+
 	r.GET("/index", getIndex)
 	r.GET("/problems/:id", getProblemPage)
-	r.GET("/template/:lang", getTemplate)
 }
 
 func getIndex(ctx *gin.Context) {
@@ -17,10 +18,4 @@ func getIndex(ctx *gin.Context) {
 
 func getProblemPage(ctx *gin.Context) {
 	ctx.HTML(200, "problems.html", nil)
-}
-
-func getTemplate(ctx *gin.Context) {
-	lang := ctx.Param("lang")
-	template := CODE_TEMPLATE[lang]
-	ctx.String(200, template)
 }

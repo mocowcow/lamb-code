@@ -1,0 +1,14 @@
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	// receive inputs from stdin
+	var a, b int
+	fmt.Scan(&a, &b)
+
+	// output the answer
+	fmt.Println(a + b)
+}

@@ -102,7 +102,7 @@
         langSelectList.addEventListener("change", async () => {
             const lang = langSelectList.value
             try {
-                const response = await fetch(`http://${window.location.host}/template/${lang}`);
+                const response = await fetch(`http://${window.location.host}/code_template/${lang}`);
                 if (response.ok) {
                     const responseData = await response.text();
                     codeBlock.value = responseData;
