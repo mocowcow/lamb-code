@@ -74,7 +74,8 @@
             // 构建JSON对象，包括当前的ID和文本编辑区的内容
             const requestData = {
                 ProblemId: parseInt(problemId),
-                Code: requestText
+                Code: requestText,
+                Lang: langSelectList.value
             };
 
             try {

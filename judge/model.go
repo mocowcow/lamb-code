@@ -3,6 +3,7 @@ package judge
 type submitCodeInput struct {
 	ProblemId int
 	Code      string
+	Lang      string
 }
 
 type testcase struct {

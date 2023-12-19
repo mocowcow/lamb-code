@@ -39,6 +39,7 @@ func submitCode(ctx *gin.Context) {
 		return
 	}
 	fmt.Println("receive", input)
+	fmt.Println("language", input.Lang)
 
 	testcases, err := getTestcases(input.ProblemId)
 	if err != nil {
