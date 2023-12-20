@@ -10,6 +10,7 @@ RUN go build -o judge_service ./cmd/judge
 RUN go build -o problem_service ./cmd/problem
 
 RUN apk add curl
+RUN apk add python3 
 
 EXPOSE 19810 19811 5672 15672
 
