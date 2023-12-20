@@ -15,6 +15,7 @@ var langMap = map[string]languageStrategy{}
 func init() {
 	langMap["invalid"] = invalid{}
 	langMap["go"] = golang{}
+	langMap["python3"] = python3{}
 }
 
 type languageStrategy interface {
@@ -50,6 +51,42 @@ func (golang) Run(userCode string, inputs []string) []string {
 
 	// run executable
 	run := exec.Command(executablePath)
+	in, _ := run.StdinPipe()
+	out, _ := run.StdoutPipe()
+	run.Start()
+
+	// input
+	for _, s := range inputs {
+		fmt.Println("input: ", s)
+		_, err := io.WriteString(in, s)
+		if err != nil {
+			fmt.Println("input failed:", err)
+		}
+	}
+	in.Close()
+
+	// output
+	ouputs := make([]string, 0)
+	scanner := bufio.NewScanner(out)
+	for scanner.Scan() {
+		aLine := scanner.Text()
+		fmt.Println("output:", aLine)
+		ouputs = append(ouputs, aLine)
+	}
+
+	return ouputs
+}
+
+type python3 struct {
+}
+
+func (python3) Run(userCode string, inputs []string) []string {
+	sourceCodePath := path.Join(CODE_FOLDER, "user_code.go")
+	os.MkdirAll(CODE_FOLDER, os.ModePerm)
+	os.WriteFile(sourceCodePath, []byte(userCode), os.ModePerm)
+
+	// run executable
+	run := exec.Command("python", sourceCodePath)
 	in, _ := run.StdinPipe()
 	out, _ := run.StdoutPipe()
 	run.Start()
