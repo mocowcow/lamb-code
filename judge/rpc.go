@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"lamb-code/config"
-	"lamb-code/playground"
 	"log"
 	"math/rand"
 	"time"
@@ -31,7 +30,7 @@ func randInt(min int, max int) int {
 	return min + rand.Intn(max-min)
 }
 
-func playgroudRPC(code string, inputs []string) (res []string, err error) {
+func playgroudRPC(lang, code string, inputs []string) (res []string, err error) {
 	url := fmt.Sprintf("amqp://%s:%s@%s:%s", config.GetString("mq.user"), config.GetString("mq.pw"), config.GetString("mq.host"), config.GetString("mq.port"))
 	conn, err := amqp.Dial(url)
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -63,7 +62,7 @@ func playgroudRPC(code string, inputs []string) (res []string, err error) {
 	failOnError(err, "Failed to register a consumer")
 
 	corrId := randomString(32)
-	data := playground.PlaygroundArgs{Code: code, Inputs: inputs}
+	data := playgroudRPCInput{Lang: lang, Code: code, Inputs: inputs}
 	bytes, _ := json.Marshal(data)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

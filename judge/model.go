@@ -16,3 +16,9 @@ type problem struct {
 	Title   string
 	Content string
 }
+
+type playgroudRPCInput struct {
+	Lang   string
+	Code   string
+	Inputs []string
+}

@@ -54,7 +54,7 @@ func submitCode(ctx *gin.Context) {
 
 	// do RPC for each TC
 	for _, tc := range testcases {
-		res, err := playgroudRPC(input.Code, strings.Split(tc.Input, "\n"))
+		res, err := playgroudRPC(input.Lang, input.Code, strings.Split(tc.Input, "\n"))
 
 		if err != nil {
 			ctx.String(400, "Some Error")
