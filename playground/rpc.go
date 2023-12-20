@@ -69,15 +69,21 @@ func RunPRCServer() {
 		defer cancel()
 		for d := range msgs {
 			fmt.Println("recieved a msg")
-			var data PlaygroundArgs
+			var data playgroudRPCInput
 			err = json.Unmarshal(d.Body, &data)
 			if err != nil {
 				fmt.Println("Failed to convert body to json")
 				return
 			}
 
+			// get language strategy concrete
+			langStrategy := langMap[data.Lang]
+			if langStrategy == nil {
+				langStrategy = langMap["invalid"]
+			}
+
 			// run playround
-			outputs := Run(data.Code, data.Inputs)
+			outputs := langStrategy.Run(data.Code, data.Inputs)
 			res, _ := json.Marshal(outputs)
 			err = ch.PublishWithContext(ctx,
 				"",        // exchange

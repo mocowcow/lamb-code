@@ -1,9 +1,9 @@
 package playground
 
 const CODE_FOLDER string = "playground/temp"
-const FILE_NAME string = "user_code.go"
 
-type PlaygroundArgs struct {
+type playgroudRPCInput struct {
+	Lang   string
 	Code   string
 	Inputs []string
 }

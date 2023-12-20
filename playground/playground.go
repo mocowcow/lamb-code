@@ -10,9 +10,30 @@ import (
 	"strings"
 )
 
-func Run(userCode string, inputs []string) []string {
+var langMap = map[string]languageStrategy{}
+
+func init() {
+	langMap["invalid"] = invalid{}
+	langMap["go"] = golang{}
+}
+
+type languageStrategy interface {
+	Run(userCode string, inputs []string) []string
+}
+
+type invalid struct {
+}
+
+func (invalid) Run(userCode string, inputs []string) []string {
+	return []string{"Invalid language"}
+}
+
+type golang struct {
+}
+
+func (golang) Run(userCode string, inputs []string) []string {
 	// write to temp file
-	sourceCodePath := path.Join(CODE_FOLDER, FILE_NAME)
+	sourceCodePath := path.Join(CODE_FOLDER, "user_code.go")
 	executablePath := path.Join(CODE_FOLDER, "run.exe")
 	os.MkdirAll(CODE_FOLDER, os.ModePerm)
 	os.WriteFile(sourceCodePath, []byte(userCode), os.ModePerm)
