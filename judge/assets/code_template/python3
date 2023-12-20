@@ -1,0 +1,6 @@
+
+# receive inputs from stdin
+a, b = map(int, input().split())
+
+# output the answer
+print(a + b)
