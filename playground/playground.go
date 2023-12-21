@@ -113,7 +113,7 @@ func (python3) Run(userCode string, inputs []string) []string {
 
 	// error
 	scanner = bufio.NewScanner(errout)
-	if scanner.Scan() {
+	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("error:", aLine)
 		ouputs = append(ouputs, aLine)
