@@ -1,7 +1,6 @@
-FROM golang:1.21.5-alpine
+FROM golang:1.21.5-alpine as build-stage
 
 WORKDIR /lamb-code
-
 COPY . .
 
 RUN go mod download
@@ -9,7 +8,10 @@ RUN go build -o pg_service ./cmd/playground
 RUN go build -o judge_service ./cmd/judge
 RUN go build -o problem_service ./cmd/problem
 
-RUN apk add curl
+FROM golang:1.21.5-alpine as run-stage
+WORKDIR /lamb-code
+COPY --from=build-stage /lamb-code .
+
 RUN apk add python3 
 
 EXPOSE 19810 19811 5672 15672
