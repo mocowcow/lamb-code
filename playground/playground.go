@@ -81,7 +81,7 @@ type python3 struct {
 }
 
 func (python3) Run(userCode string, inputs []string) []string {
-	sourceCodePath := path.Join(CODE_FOLDER, "user_code.go")
+	sourceCodePath := path.Join(CODE_FOLDER, "user_code")
 	os.MkdirAll(CODE_FOLDER, os.ModePerm)
 	os.WriteFile(sourceCodePath, []byte(userCode), os.ModePerm)
 
@@ -89,6 +89,7 @@ func (python3) Run(userCode string, inputs []string) []string {
 	run := exec.Command("python", sourceCodePath)
 	in, _ := run.StdinPipe()
 	out, _ := run.StdoutPipe()
+	errout, _ := run.StderrPipe()
 	run.Start()
 
 	// input
@@ -107,6 +108,14 @@ func (python3) Run(userCode string, inputs []string) []string {
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("output:", aLine)
+		ouputs = append(ouputs, aLine)
+	}
+
+	// error
+	scanner = bufio.NewScanner(errout)
+	if scanner.Scan() {
+		aLine := scanner.Text()
+		fmt.Println("error:", aLine)
 		ouputs = append(ouputs, aLine)
 	}
 
