@@ -2,7 +2,11 @@
 
 ![lamb.jpg](./lamb.jpg)
 
-微服務風格的簡易 Online Judge，目前只支援 Golang 1.20。  
+微服務風格的簡易 Online Judge。  
+支援語言：
+
+- Golang  
+- Python3  
 
 服務拆分成：  
 
