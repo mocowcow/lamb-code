@@ -3,6 +3,8 @@
 ![lamb.jpg](./lamb.jpg)
 
 微服務風格的簡易 Online Judge。  
+已部署至[AWS](<http://3.113.251.71:19811/index>)。  
+
 支援語言：
 
 - Golang  
