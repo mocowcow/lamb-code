@@ -57,12 +57,12 @@ func (code golang) Run(userCode string, inputs []string) []string {
 	out, _ := run.StdoutPipe()
 	run.Start()
 
-	ouputs := make([]string, 0)
+	results := make([]string, 0)
 	// prevent TLE, kill proc after time limit
 	time.AfterFunc(code.timeLimit, func() {
 		run.Process.Kill()
 		fmt.Println("TLE, kill", run.Process.Pid)
-		ouputs = []string{"Time Limit Exceed"}
+		results = []string{"Time Limit Exceed"}
 	})
 
 	// input
@@ -80,10 +80,10 @@ func (code golang) Run(userCode string, inputs []string) []string {
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("output:", aLine)
-		ouputs = append(ouputs, aLine)
+		results = append(results, aLine)
 	}
 
-	return ouputs
+	return results
 }
 
 type python3 struct {
@@ -102,12 +102,12 @@ func (code python3) Run(userCode string, inputs []string) []string {
 	errout, _ := run.StderrPipe()
 	run.Start()
 
-	ouputs := make([]string, 0)
+	results := make([]string, 0)
 	// prevent TLE, kill proc after time limit
 	time.AfterFunc(code.timeLimit, func() {
 		run.Process.Kill()
 		fmt.Println("TLE, kill", run.Process.Pid)
-		ouputs = []string{"Time Limit Exceed"}
+		results = []string{"Time Limit Exceed"}
 	})
 
 	// input
@@ -125,7 +125,7 @@ func (code python3) Run(userCode string, inputs []string) []string {
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("output:", aLine)
-		ouputs = append(ouputs, aLine)
+		results = append(results, aLine)
 	}
 
 	// error
@@ -133,8 +133,8 @@ func (code python3) Run(userCode string, inputs []string) []string {
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("error:", aLine)
-		ouputs = append(ouputs, aLine)
+		results = append(results, aLine)
 	}
 
-	return ouputs
+	return results
 }
