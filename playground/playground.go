@@ -8,14 +8,15 @@ import (
 	"os/exec"
 	"path"
 	"strings"
+	"time"
 )
 
 var langMap = map[string]languageStrategy{}
 
 func init() {
 	langMap["invalid"] = invalid{}
-	langMap["go"] = golang{}
-	langMap["python3"] = python3{}
+	langMap["go"] = golang{timeLimit: GO_TIME_LIMIT}
+	langMap["python3"] = python3{timeLimit: PY3_TIME_LIMIT}
 }
 
 type languageStrategy interface {
@@ -30,9 +31,10 @@ func (invalid) Run(userCode string, inputs []string) []string {
 }
 
 type golang struct {
+	timeLimit time.Duration
 }
 
-func (golang) Run(userCode string, inputs []string) []string {
+func (code golang) Run(userCode string, inputs []string) []string {
 	// write to temp file
 	sourceCodePath := path.Join(CODE_FOLDER, "user_code.go")
 	executablePath := path.Join(CODE_FOLDER, "run.exe")
@@ -55,6 +57,14 @@ func (golang) Run(userCode string, inputs []string) []string {
 	out, _ := run.StdoutPipe()
 	run.Start()
 
+	results := make([]string, 0)
+	// prevent TLE, kill proc after time limit
+	time.AfterFunc(code.timeLimit, func() {
+		run.Process.Kill()
+		fmt.Println("TLE, kill", run.Process.Pid)
+		results = []string{"Time Limit Exceed"}
+	})
+
 	// input
 	for _, s := range inputs {
 		fmt.Println("input: ", s)
@@ -66,21 +76,21 @@ func (golang) Run(userCode string, inputs []string) []string {
 	in.Close()
 
 	// output
-	ouputs := make([]string, 0)
 	scanner := bufio.NewScanner(out)
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("output:", aLine)
-		ouputs = append(ouputs, aLine)
+		results = append(results, aLine)
 	}
 
-	return ouputs
+	return results
 }
 
 type python3 struct {
+	timeLimit time.Duration
 }
 
-func (python3) Run(userCode string, inputs []string) []string {
+func (code python3) Run(userCode string, inputs []string) []string {
 	sourceCodePath := path.Join(CODE_FOLDER, "user_code")
 	os.MkdirAll(CODE_FOLDER, os.ModePerm)
 	os.WriteFile(sourceCodePath, []byte(userCode), os.ModePerm)
@@ -92,6 +102,14 @@ func (python3) Run(userCode string, inputs []string) []string {
 	errout, _ := run.StderrPipe()
 	run.Start()
 
+	results := make([]string, 0)
+	// prevent TLE, kill proc after time limit
+	time.AfterFunc(code.timeLimit, func() {
+		run.Process.Kill()
+		fmt.Println("TLE, kill", run.Process.Pid)
+		results = []string{"Time Limit Exceed"}
+	})
+
 	// input
 	for _, s := range inputs {
 		fmt.Println("input: ", s)
@@ -103,12 +121,11 @@ func (python3) Run(userCode string, inputs []string) []string {
 	in.Close()
 
 	// output
-	ouputs := make([]string, 0)
 	scanner := bufio.NewScanner(out)
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("output:", aLine)
-		ouputs = append(ouputs, aLine)
+		results = append(results, aLine)
 	}
 
 	// error
@@ -116,8 +133,8 @@ func (python3) Run(userCode string, inputs []string) []string {
 	for scanner.Scan() {
 		aLine := scanner.Text()
 		fmt.Println("error:", aLine)
-		ouputs = append(ouputs, aLine)
+		results = append(results, aLine)
 	}
 
-	return ouputs
+	return results
 }
